@@ -9,7 +9,7 @@
 
 class Model {
  public:
-  bool ParseExpression(const std::string& expression) {
+  void ParseExpression(const std::string& expression) {
     std::queue<Token>().swap(rpn_queue_);
     std::stack<Token> op_stack;
 
@@ -21,7 +21,7 @@ class Model {
     while (it != expression_end) {
       curr_token_type = GetTokenType(it, expression_end);
       if (!IsValidToken(curr_token_type, prev_token_type)) {
-        return false;
+        throw std::invalid_argument(invalid_exp_message_);
       }
       if (curr_token_type == TokenType::kCloseParenthesis) {
         // A right parenthesis:
@@ -40,7 +40,7 @@ class Model {
 
         if (op_stack.empty()) {
           // Mismatched parentheses
-          return false;
+          throw std::invalid_argument(invalid_exp_message_);
         } else {
           // Pop the left parenthesis from the stack.
           op_stack.pop();
@@ -66,7 +66,7 @@ class Model {
         token = expression.substr(i, end - i);
         if (token.back() == '.' ||
             std::count(token.begin(), token.end(), '.') > 1) {
-          return false;
+          throw std::invalid_argument(invalid_exp_message_);
         }
         rpn_queue_.push(std::stod(token));
         it += end - i;
@@ -93,7 +93,7 @@ class Model {
       prev_token_type = curr_token_type;
     }
     if (prev_token_type >= TokenType::kDiv) {
-      return false;
+      throw std::invalid_argument(invalid_exp_message_);
     }
 
     while (!op_stack.empty()) {
@@ -101,14 +101,12 @@ class Model {
       TokenType* op = std::get_if<TokenType>(&top);
 
       if (op && *op == TokenType::kOpenParenthesis) {
-        return false;
+        throw std::invalid_argument(invalid_exp_message_);
       }
 
       rpn_queue_.push(top);
       op_stack.pop();
     }
-
-    return true;
   }
 
   double Calculate(double x = 0) {
