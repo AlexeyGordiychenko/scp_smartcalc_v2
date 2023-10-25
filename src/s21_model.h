@@ -127,14 +127,14 @@ class Model {
           eval_stack.push(x);
         } else if (IsFunction(*op)) {
           if (eval_stack.empty()) {
-            throw std::invalid_argument("Not enough arguments for function");
+            throw std::invalid_argument(invalid_exp_message_);
           }
           double arg = eval_stack.top();
           eval_stack.pop();
           eval_stack.push(unary_functions_map_[*op](arg));
         } else {
           if (eval_stack.size() < 2) {
-            throw std::invalid_argument("Not enough arguments for operator");
+            throw std::invalid_argument(invalid_exp_message_);
           }
           double arg2 = eval_stack.top();
           eval_stack.pop();
@@ -146,7 +146,7 @@ class Model {
     }
 
     if (eval_stack.size() != 1) {
-      throw std::logic_error("Invalid RPN expression");
+      throw std::invalid_argument(invalid_exp_message_);
     }
 
     return eval_stack.top();
@@ -178,6 +178,7 @@ class Model {
 
   using Token = std::variant<double, TokenType>;
 
+  static const inline std::string invalid_exp_message_ = "Invalid expression";
   static double Add(double a, double b) { return a + b; }
   static double Subtract(double a, double b) { return a - b; }
   static double Multiply(double a, double b) { return a * b; }
