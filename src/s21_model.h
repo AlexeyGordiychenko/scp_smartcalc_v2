@@ -13,100 +13,41 @@ class Model {
     std::queue<Token>().swap(rpn_queue_);
     std::stack<Token> op_stack;
 
-    std::string token;
     TokenType prev_token_type = TokenType::kNone,
               curr_token_type = TokenType::kNone;
     auto expression_end = expression.end();
     auto it = expression.begin();
+
     while (it != expression_end) {
       curr_token_type = GetTokenType(it, expression_end);
+
       if (!IsValidToken(curr_token_type, prev_token_type)) {
         throw std::invalid_argument(invalid_exp_message_);
       }
+
       if (curr_token_type == TokenType::kCloseParenthesis) {
-        // A right parenthesis:
-        // While the token at the top of the stack is not a left parenthesis,
-        // pop the token-operators from the stack into the output queue.
-        while (!op_stack.empty()) {
-          auto top = op_stack.top();
-          TokenType* op = std::get_if<TokenType>(&top);
-          if (op && *op != TokenType::kOpenParenthesis) {
-            rpn_queue_.push(top);
-            op_stack.pop();
-          } else {
-            break;
-          }
-        }
-
-        if (op_stack.empty()) {
-          // Mismatched parentheses
-          throw std::invalid_argument(invalid_exp_message_);
-        } else {
-          // Pop the left parenthesis from the stack.
-          op_stack.pop();
-          // If there is a function token at the top of the stack, then pop the
-          // function from the stack into the output queue
-          if (!op_stack.empty()) {
-            auto top = op_stack.top();
-            TokenType* op = std::get_if<TokenType>(&top);
-
-            if (op && IsFunction(*op)) {
-              rpn_queue_.push(top);
-              op_stack.pop();
-            }
-          }
-        }
+        HandleCloseParenthesis(op_stack);
       } else if (curr_token_type == TokenType::kNumber) {
         curr_token_type = TokenType::kNumber;
-        auto i = it - expression.begin();
-        auto end = expression.find_first_not_of("0123456789.", i);
-        if (end == std::string::npos) {
-          end = expression.size();
-        }
-        token = expression.substr(i, end - i);
-        if (token.back() == '.' ||
-            std::count(token.begin(), token.end(), '.') > 1) {
-          throw std::invalid_argument(invalid_exp_message_);
-        }
-        rpn_queue_.push(std::stod(token));
-        it += end - i;
+        ParseNumber(expression, it);
       } else if (curr_token_type == TokenType::kX) {
         rpn_queue_.push(curr_token_type);
       } else if (IsBinaryOperator(curr_token_type)) {
-        if ((prev_token_type == TokenType::kNone ||
-             prev_token_type == TokenType::kOpenParenthesis) &&
-            IsPlusMinus(curr_token_type)) {
-          rpn_queue_.push(0.0);
-        }
-
-        Token top;
-        while (!op_stack.empty() &&
-               GetPriority(std::get<TokenType>(top = op_stack.top())) >=
-                   GetPriority(curr_token_type)) {
-          op_stack.pop();
-          rpn_queue_.push(top);
-        }
-        op_stack.push(curr_token_type);
+        HandleBinaryOperator(op_stack, curr_token_type, prev_token_type);
       } else {
         op_stack.push(curr_token_type);
       }
+
       prev_token_type = curr_token_type;
     }
+
+    // If we have any operator at the end - it's an invalid expression
     if (prev_token_type >= TokenType::kDiv) {
       throw std::invalid_argument(invalid_exp_message_);
     }
 
-    while (!op_stack.empty()) {
-      auto top = op_stack.top();
-      TokenType* op = std::get_if<TokenType>(&top);
-
-      if (op && *op == TokenType::kOpenParenthesis) {
-        throw std::invalid_argument(invalid_exp_message_);
-      }
-
-      rpn_queue_.push(top);
-      op_stack.pop();
-    }
+    // Move the remaining operators to the RPN queue
+    MoveOperatorsFromStackToQueue(op_stack);
   }
 
   double Calculate(double x = 0) {
@@ -311,5 +252,87 @@ class Model {
             ptt == TokenType::kOpenParenthesis;
     }
     return res;
+  }
+
+  void HandleCloseParenthesis(std::stack<Token>& op_stack) {
+    // While the token at the top of the stack is not a left parenthesis,
+    // pop the token-operators from the stack into the output queue.
+    while (!op_stack.empty()) {
+      auto top = op_stack.top();
+      TokenType* op = std::get_if<TokenType>(&top);
+
+      if (op && *op != TokenType::kOpenParenthesis) {
+        rpn_queue_.push(top);
+        op_stack.pop();
+      } else {
+        break;
+      }
+    }
+
+    if (op_stack.empty()) {
+      // Mismatched parentheses
+      throw std::invalid_argument(invalid_exp_message_);
+    } else {
+      // Pop the left parenthesis from the stack.
+      op_stack.pop();
+      // If there is a function token at the top of the stack, then pop the
+      // function from the stack into the output queue
+      if (!op_stack.empty()) {
+        auto top = op_stack.top();
+        TokenType* op = std::get_if<TokenType>(&top);
+
+        if (op && IsFunction(*op)) {
+          rpn_queue_.push(top);
+          op_stack.pop();
+        }
+      }
+    }
+  }
+
+  void ParseNumber(const std::string& expression,
+                   std::string::const_iterator& it) {
+    auto i = it - expression.begin();
+    auto end = expression.find_first_not_of("0123456789.", i);
+    if (end == std::string::npos) {
+      end = expression.size();
+    }
+    std::string token = expression.substr(i, end - i);
+    if (token.back() == '.' ||
+        std::count(token.begin(), token.end(), '.') > 1) {
+      throw std::invalid_argument(invalid_exp_message_);
+    }
+    rpn_queue_.push(std::stod(token));
+    it += end - i;
+  }
+
+  void HandleBinaryOperator(std::stack<Token>& op_stack, TokenType ctt,
+                            TokenType ptt) {
+    if ((ptt == TokenType::kNone || ptt == TokenType::kOpenParenthesis) &&
+        IsPlusMinus(ctt)) {
+      rpn_queue_.push(0.0);
+    }
+
+    Token top;
+    while (!op_stack.empty() &&
+           GetPriority(std::get<TokenType>(top = op_stack.top())) >=
+               GetPriority(ctt)) {
+      op_stack.pop();
+      rpn_queue_.push(top);
+    }
+    op_stack.push(ctt);
+  }
+
+  void MoveOperatorsFromStackToQueue(std::stack<Token>& op_stack) {
+    while (!op_stack.empty()) {
+      auto top = op_stack.top();
+      TokenType* op = std::get_if<TokenType>(&top);
+
+      if (op && *op == TokenType::kOpenParenthesis) {
+        throw std::invalid_argument(invalid_exp_message_);
+      }
+
+      rpn_queue_.push(top);
+      op_stack.pop();
+    }
   }
 };
