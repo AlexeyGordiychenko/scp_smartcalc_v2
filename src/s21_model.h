@@ -92,9 +92,7 @@ class Model {
       }
       prev_token_type = curr_token_type;
     }
-
-    if (prev_token_type >= TokenType::kPlus &&
-        prev_token_type != TokenType::kX) {
+    if (prev_token_type >= TokenType::kDiv) {
       return false;
     }
 

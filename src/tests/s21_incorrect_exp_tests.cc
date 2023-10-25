@@ -230,6 +230,77 @@ TEST(s21_expression_ends_on_operator, 0) {
   Model model;
   EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)+cos"));
 }
+
+TEST(s21_expression_ends_on_operator, 1) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)+cos"));
+}
+
+TEST(s21_expression_ends_on_operator, 2) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)+tan"));
+}
+
+TEST(s21_expression_ends_on_operator, 3) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)+asin"));
+}
+
+TEST(s21_expression_ends_on_operator, 4) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)+acos"));
+}
+
+TEST(s21_expression_ends_on_operator, 5) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)+atan"));
+}
+
+TEST(s21_expression_ends_on_operator, 6) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)+sqrt"));
+}
+
+TEST(s21_expression_ends_on_operator, 7) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)+ln"));
+}
+
+TEST(s21_expression_ends_on_operator, 8) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)+log"));
+}
+
+TEST(s21_expression_ends_on_operator, 9) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)/"));
+}
+
+TEST(s21_expression_ends_on_operator, 10) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)*"));
+}
+
+TEST(s21_expression_ends_on_operator, 11) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)^"));
+}
+
+TEST(s21_expression_ends_on_operator, 12) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)+"));
+}
+
+TEST(s21_expression_ends_on_operator, 13) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)-"));
+}
+
+TEST(s21_expression_ends_on_operator, 14) {
+  Model model;
+  EXPECT_FALSE(model.ParseExpression("cos(30)+sin(45)*tan(60)mod"));
+}
+
 TEST(s21_two_decimal_points, 0) {
   Model model;
   EXPECT_FALSE(model.ParseExpression("2+2.25+3.25.48-3"));
