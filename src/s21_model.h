@@ -8,6 +8,8 @@
 #include <unordered_map>
 #include <variant>
 
+namespace s21 {
+
 class Model {
  public:
   void ParseExpression(const std::string& expression) {
@@ -365,3 +367,4 @@ class Model {
     if (!rpn_queue_.empty()) rpn_queue_ = {};
   }
 };
+}  // namespace s21
