@@ -11,9 +11,8 @@
 class Model {
  public:
   void ParseExpression(const std::string& expression) {
-    std::queue<Token>().swap(rpn_queue_);
+    ClearTheQueue();
     std::stack<Token> op_stack;
-
     TokenType prev_token_type = TokenType::kNone,
               curr_token_type = TokenType::kNone;
     auto expression_end = expression.end();
@@ -359,5 +358,9 @@ class Model {
                   std::string::const_iterator& end) {
     while (it != end && std::isspace(*it)) ++it;
     return it != end;
+  }
+
+  void ClearTheQueue() {
+    if (!rpn_queue_.empty()) rpn_queue_ = {};
   }
 };
