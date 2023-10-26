@@ -22,7 +22,7 @@ class Model {
       curr_token_type = GetTokenType(it, expression_end);
 
       if (!IsValidToken(curr_token_type, prev_token_type)) {
-        throw std::invalid_argument(invalid_exp_message_);
+        ThrowInvalidExpression();
       }
 
       if (curr_token_type == TokenType::kCloseParenthesis) {
@@ -43,7 +43,7 @@ class Model {
 
     // If we have any operator at the end - it's an invalid expression
     if (prev_token_type >= TokenType::kDiv) {
-      throw std::invalid_argument(invalid_exp_message_);
+      ThrowInvalidExpression();
     }
 
     // Move the remaining operators to the RPN queue
@@ -64,14 +64,14 @@ class Model {
           eval_stack.push(x);
         } else if (IsFunction(*op)) {
           if (eval_stack.empty()) {
-            throw std::invalid_argument(invalid_exp_message_);
+            ThrowInvalidExpression();
           }
           double arg = eval_stack.top();
           eval_stack.pop();
           eval_stack.push(unary_functions_map_[*op](arg));
         } else {
           if (eval_stack.size() < 2) {
-            throw std::invalid_argument(invalid_exp_message_);
+            ThrowInvalidExpression();
           }
           double arg2 = eval_stack.top();
           eval_stack.pop();
@@ -83,7 +83,7 @@ class Model {
     }
 
     if (eval_stack.size() != 1) {
-      throw std::invalid_argument(invalid_exp_message_);
+      ThrowInvalidExpression();
     }
 
     return eval_stack.top();
@@ -280,7 +280,7 @@ class Model {
 
     if (op_stack.empty()) {
       // Mismatched parentheses
-      throw std::invalid_argument(invalid_exp_message_);
+      ThrowInvalidExpression();
     } else {
       // Pop the left parenthesis from the stack.
       op_stack.pop();
@@ -304,7 +304,7 @@ class Model {
                                    expression.data() + expression.size(), num);
 
     if (ec != std::errc()) {
-      throw std::invalid_argument(invalid_exp_message_);
+      ThrowInvalidExpression();
     }
 
     rpn_queue_.push(num);
@@ -346,7 +346,7 @@ class Model {
       TokenType* op = std::get_if<TokenType>(&top);
 
       if (op && *op == TokenType::kOpenParenthesis) {
-        throw std::invalid_argument(invalid_exp_message_);
+        ThrowInvalidExpression();
       }
 
       rpn_queue_.push(top);
@@ -358,6 +358,11 @@ class Model {
                   std::string::const_iterator& end) {
     while (it != end && std::isspace(*it)) ++it;
     return it != end;
+  }
+
+  void ThrowInvalidExpression() {
+    ClearTheQueue();
+    throw std::invalid_argument(invalid_exp_message_);
   }
 
   void ClearTheQueue() {
