@@ -31,7 +31,7 @@ class Model {
         curr_token_type = TokenType::kNumber;
         it += ParseNumber(std::string(it, expression_end));
       } else if (curr_token_type == TokenType::kX) {
-        rpn_queue_.push(curr_token_type);
+        rpn_queue_.push_back(curr_token_type);
       } else if (IsBinaryOperator(curr_token_type)) {
         HandleBinaryOperator(op_stack, curr_token_type, prev_token_type);
       } else {
@@ -52,11 +52,7 @@ class Model {
 
   double Calculate(double x = 0) {
     std::stack<double> eval_stack;
-
-    while (!rpn_queue_.empty()) {
-      Token token = rpn_queue_.front();
-      rpn_queue_.pop();
-
+    for (auto token : rpn_queue_) {
       if (auto val = std::get_if<double>(&token)) {
         eval_stack.push(*val);
       } else if (auto op = std::get_if<TokenType>(&token)) {
@@ -128,7 +124,7 @@ class Model {
     return a / b;
   }
 
-  std::queue<Token> rpn_queue_;
+  std::vector<Token> rpn_queue_;
 
   static inline std::unordered_map<std::string, TokenType> tokens_map_ = {
       {"(", TokenType::kOpenParenthesis},
@@ -271,7 +267,7 @@ class Model {
       TokenType* op = std::get_if<TokenType>(&top);
 
       if (op && *op != TokenType::kOpenParenthesis) {
-        rpn_queue_.push(top);
+        rpn_queue_.push_back(top);
         op_stack.pop();
       } else {
         break;
@@ -291,7 +287,7 @@ class Model {
         TokenType* op = std::get_if<TokenType>(&top);
 
         if (op && IsFunction(*op)) {
-          rpn_queue_.push(top);
+          rpn_queue_.push_back(top);
           op_stack.pop();
         }
       }
@@ -307,7 +303,7 @@ class Model {
       ThrowInvalidExpression();
     }
 
-    rpn_queue_.push(num);
+    rpn_queue_.push_back(num);
     return p - expression.data();
   }
 
@@ -316,7 +312,7 @@ class Model {
     // If unary + or -, push 0 into the output queue
     if ((ptt == TokenType::kNone || ptt == TokenType::kOpenParenthesis) &&
         IsPlusMinus(ctt)) {
-      rpn_queue_.push(0.0);
+      rpn_queue_.push_back(0.0);
     }
 
     // While there is an token-operator O2 at the top of the stack, that has
@@ -330,7 +326,7 @@ class Model {
       if ((ctt == TokenType::kExp) ? stack_priority > ctt_priority
                                    : stack_priority >= ctt_priority) {
         op_stack.pop();
-        rpn_queue_.push(top);
+        rpn_queue_.push_back(top);
       } else {
         break;
       }
@@ -349,7 +345,7 @@ class Model {
         ThrowInvalidExpression();
       }
 
-      rpn_queue_.push(top);
+      rpn_queue_.push_back(top);
       op_stack.pop();
     }
   }
