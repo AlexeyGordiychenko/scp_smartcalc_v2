@@ -404,12 +404,12 @@ TEST(s21_loose_decimal_points, 1) {
 
 TEST(s21_loose_decimal_points, 2) {
   Model model;
-  EXPECT_THROW(model.ParseExpression(".5-8"), std::invalid_argument);
+  EXPECT_THROW(model.ParseExpression(".sin(5)-8"), std::invalid_argument);
 }
 
 TEST(s21_loose_decimal_points, 3) {
   Model model;
-  EXPECT_THROW(model.ParseExpression("5+7-2^2."), std::invalid_argument);
+  EXPECT_THROW(model.ParseExpression("5+7-2^.*2"), std::invalid_argument);
 }
 
 TEST(s21_loose_decimal_points, 4) {
@@ -471,4 +471,48 @@ TEST(s21_spaces, 2) {
   Model model;
   EXPECT_THROW(model.ParseExpression("lo g(10)*2^3*5+x-x"),
                std::invalid_argument);
+}
+
+TEST(s21_incorrect_e_notation, 0) {
+  Model model;
+  EXPECT_THROW(model.ParseExpression("5+2.3e.4"), std::invalid_argument);
+}
+
+TEST(s21_incorrect_e_notation, 1) {
+  Model model;
+  EXPECT_THROW(model.ParseExpression("3.5-1.2e/2"), std::invalid_argument);
+}
+
+TEST(s21_incorrect_e_notation, 2) {
+  Model model;
+  EXPECT_THROW(model.ParseExpression("(4.5e + 2)*(6.7e2-3.2e-4)"),
+               std::invalid_argument);
+}
+
+TEST(s21_incorrect_e_notation, 3) {
+  Model model;
+  EXPECT_THROW(model.ParseExpression("(2.1e5^3)/(x-e2)"),
+               std::invalid_argument);
+}
+
+TEST(s21_incorrect_e_notation, 4) {
+  Model model;
+  EXPECT_THROW(model.ParseExpression("(7.6e3mod5)+(e mod2)"),
+               std::invalid_argument);
+}
+
+TEST(s21_incorrect_e_notation, 5) {
+  Model model;
+  EXPECT_THROW(model.ParseExpression("ln(2.3 e+4)+log(7.6e3)"),
+               std::invalid_argument);
+}
+
+TEST(s21_incorrect_e_notation, 6) {
+  Model model;
+  EXPECT_THROW(model.ParseExpression("acos(0.5)-e"), std::invalid_argument);
+}
+
+TEST(s21_incorrect_e_notation, 7) {
+  Model model;
+  EXPECT_THROW(model.ParseExpression("2-2.1e2."), std::invalid_argument);
 }

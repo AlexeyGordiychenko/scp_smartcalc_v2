@@ -1,3 +1,4 @@
+#include <charconv>
 #include <cmath>
 #include <functional>
 #include <iostream>
@@ -29,7 +30,7 @@ class Model {
         HandleCloseParenthesis(op_stack);
       } else if (curr_token_type == TokenType::kNumber) {
         curr_token_type = TokenType::kNumber;
-        ParseNumber(expression, it);
+        it += ParseNumber(std::string(it, expression_end));
       } else if (curr_token_type == TokenType::kX) {
         rpn_queue_.push(curr_token_type);
       } else if (IsBinaryOperator(curr_token_type)) {
@@ -197,9 +198,9 @@ class Model {
   }
 
   TokenType GetTokenType(std::string::const_iterator& it,
-                         std::string::const_iterator end) {
+                         std::string::const_iterator& end) {
     TokenType res = TokenType::kNone;
-    if (std::isdigit(*it)) {
+    if (std::isdigit(*it) || *it == '.') {
       res = TokenType::kNumber;
     } else {
       std::string token(1, *it);
@@ -215,6 +216,7 @@ class Model {
         res = match->second;
       }
     }
+
     return res;
   }
 
@@ -289,20 +291,17 @@ class Model {
     }
   }
 
-  void ParseNumber(const std::string& expression,
-                   std::string::const_iterator& it) {
-    auto i = it - expression.begin();
-    auto end = expression.find_first_not_of("0123456789.", i);
-    if (end == std::string::npos) {
-      end = expression.size();
-    }
-    std::string token = expression.substr(i, end - i);
-    if (token.back() == '.' ||
-        std::count(token.begin(), token.end(), '.') > 1) {
+  std::size_t ParseNumber(const std::string& expression) {
+    double num;
+    auto [p, ec] = std::from_chars(expression.data(),
+                                   expression.data() + expression.size(), num);
+
+    if (ec != std::errc()) {
       throw std::invalid_argument(invalid_exp_message_);
     }
-    rpn_queue_.push(std::stod(token));
-    it += end - i;
+
+    rpn_queue_.push(num);
+    return p - expression.data();
   }
 
   void HandleBinaryOperator(std::stack<Token>& op_stack, TokenType ctt,

@@ -382,3 +382,197 @@ TEST(s21_correct, 62) {
   model.ParseExpression("2 ^ 2 ^ 3 ");
   EXPECT_DOUBLE_EQ(model.Calculate(), 256);
 }
+
+TEST(s21_correct, 63) {
+  Model model;
+  model.ParseExpression("(5+2.3e4)/(3.5-1.2e2)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), -197.46781115879827);
+}
+
+TEST(s21_correct, 64) {
+  Model model;
+  model.ParseExpression("(4.5e3+2)*(6.7e2-3.2e-4)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 3016338.55936);
+}
+
+TEST(s21_correct, 65) {
+  Model model;
+  model.ParseExpression("(2.1e5^3)/(x-2.3e2)");
+  EXPECT_DOUBLE_EQ(model.Calculate(6550), 1465348101265.8228);
+}
+
+TEST(s21_correct, 66) {
+  Model model;
+  model.ParseExpression("(7.6e3mod5)+(3.4e4mod2)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 0.0);
+}
+
+TEST(s21_correct, 67) {
+  Model model;
+  model.ParseExpression("sin(0.5235987755982988)+cos(0.7853981633974483)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 1.2071067811865475);
+}
+
+TEST(s21_correct, 68) {
+  Model model;
+  model.ParseExpression("tan(1.0471975511965976)-sin(1.5707963267948966)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 0.7320508075688767);
+}
+
+TEST(s21_correct, 69) {
+  Model model;
+  model.ParseExpression("asin(1)+acos(0)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 3.141592653589793);
+}
+
+TEST(s21_correct, 70) {
+  Model model;
+  model.ParseExpression("atan(1)-asin(0.5)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 0.26179938779914935);
+}
+
+TEST(s21_correct, 71) {
+  Model model;
+  model.ParseExpression("ln(2.3e+4)+log(7.6e3)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 13.924063087192078);
+}
+
+TEST(s21_correct, 72) {
+  Model model;
+  model.ParseExpression("(sin(0.7853981633974483)+3.4e2)*(log(100)^3)/(xmod3)");
+  EXPECT_DOUBLE_EQ(model.Calculate(5710), 2725.6568542494924);
+}
+
+TEST(s21_correct, 73) {
+  Model model;
+  model.ParseExpression("acos(0.5)-(2.3e3/ln(5))");
+  EXPECT_DOUBLE_EQ(model.Calculate(), -1428.0231519359106);
+}
+
+TEST(s21_correct, 74) {
+  Model model;
+  model.ParseExpression(
+      "(tan(1.0471975511965976)+1.2e-2)*(2.3e4^2)/(5mod3)+4.8e+4");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 461349438.60196793);
+}
+
+TEST(s21_correct, 75) {
+  Model model;
+  model.ParseExpression("asin(0.5)+(4.5e-3*ln(2))");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 0.5267179379108187);
+}
+
+TEST(s21_correct, 76) {
+  Model model;
+  model.ParseExpression("(atan(1)+3.4e4)*(2.3e2^3)/(7mod2)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 413687555939.45404);
+}
+
+TEST(s21_correct, 77) {
+  Model model;
+  model.ParseExpression("ln(7.6e3)+log(100)*cos(0.7853981633974483)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 10.350117088647519);
+}
+
+TEST(s21_correct, 78) {
+  Model model;
+  model.ParseExpression(
+      "(sin(0.5235987755982988)+2.1e5)*(3.4e4^2)/(50e-1mod2)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 242760578000000.0);
+}
+
+TEST(s21_correct, 79) {
+  Model model;
+  model.ParseExpression("acos(0.5)-(2.3e3/ln(4.5e3))");
+  EXPECT_DOUBLE_EQ(model.Calculate(), -272.377166514941);
+}
+
+TEST(s21_correct, 80) {
+  Model model;
+  model.ParseExpression("(tan(0.7853981633974483)+1.2e2)*(7.6e3^2)/(3mod2)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 6988960000.0);
+}
+
+TEST(s21_correct, 81) {
+  Model model;
+  model.ParseExpression("asin(0.5)+(2.1e5*ln(2))");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 145561.4315163641);
+}
+
+TEST(s21_correct, 82) {
+  Model model;
+  model.ParseExpression("(atan(1)+6.7e-2)*(3.4e+4^3)/(7mod3)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 33502657414173.305);
+}
+
+TEST(s21_correct, 83) {
+  Model model;
+  model.ParseExpression("(x+2.3e4)/(x-1.2e2)+1.1e-1^(2*1.0471975511965976)");
+  EXPECT_DOUBLE_EQ(model.Calculate(8106), 3.9048905738199187);
+}
+
+TEST(s21_correct, 84) {
+  Model model;
+  model.ParseExpression(
+      "(4.5e3+2)*(6.7e2-3.2e4)+sin(20.943951023931955)+cos(41.88790204786391)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), -141047659.63397458);
+}
+
+TEST(s21_correct, 85) {
+  Model model;
+  model.ParseExpression("(2.1e5^3)/(x-2.3e2)+tan(62.831853071795855)");
+  EXPECT_DOUBLE_EQ(model.Calculate(1580), 6860000000000.0);
+}
+
+TEST(s21_correct, 86) {
+  Model model;
+  model.ParseExpression("(7.6e3mod5)+(3.4e4mod2)-asin(1)-acos(0)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), -3.141592653589793);
+}
+
+TEST(s21_correct, 87) {
+  Model model;
+  model.ParseExpression(
+      "sin(0.5235987755982988)+cos(0.7853981633974483)-atan(1)+acos(0)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 1.9925049445839957);
+}
+
+TEST(s21_correct, 88) {
+  Model model;
+  model.ParseExpression(
+      "tan(1.0471975511965976)-sin(1.5707963267948966)+ln(2.3e4)-log(7.6e3)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 6.894486710199372);
+}
+
+TEST(s21_correct, 89) {
+  Model model;
+  model.ParseExpression(
+      "(sin(0.7853981633974483)+3.4e2)*(log(100)^3)/"
+      "(7mod3)+8.4e2^(1.5707963267948966)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 41940.20011530107);
+}
+
+TEST(s21_correct, 90) {
+  Model model;
+  model.ParseExpression("acos(0.5)-(2.3e3/ln(5))+tan(62.831853071795855)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), -1428.0231519359106);
+}
+
+TEST(s21_correct, 91) {
+  Model model;
+  model.ParseExpression(
+      "(tan(1.0471975511965976)+1.2e2)*(2.3e4^2)/(5mod3)+asin(0.5)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 32198127439.12557);
+}
+
+TEST(s21_correct, 92) {
+  Model model;
+  model.ParseExpression("(atan(1)+3.4e4)*(2.3e2^3)/(7mod2)+ln(7.6e3)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 413687555948.38995);
+}
+
+TEST(s21_correct, 93) {
+  Model model;
+  model.ParseExpression("(1.2e1 * 2) + (2.1e2 / 8.1e0)");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 49.925925925925924);
+}
