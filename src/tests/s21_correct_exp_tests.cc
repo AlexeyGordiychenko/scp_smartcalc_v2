@@ -576,3 +576,10 @@ TEST(s21_correct, 93) {
   model.ParseExpression("(1.2e1 * 2) + (2.1e2 / 8.1e0)");
   EXPECT_DOUBLE_EQ(model.Calculate(), 49.925925925925924);
 }
+
+TEST(s21_correct, 94) {
+  Model model;
+  model.ParseExpression("1/x");
+  EXPECT_THROW(model.Calculate(), std::domain_error);
+  EXPECT_DOUBLE_EQ(model.Calculate(2), 0.5);
+}
