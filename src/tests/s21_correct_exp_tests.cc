@@ -376,3 +376,9 @@ TEST(s21_correct, 61) {
   model.ParseExpression(" x ^ 3 * 5+15-x+sqrt(16) ");
   EXPECT_DOUBLE_EQ(model.Calculate(1810), 29648703209.0);
 }
+
+TEST(s21_correct, 62) {
+  Model model;
+  model.ParseExpression("2 ^ 2 ^ 3 ");
+  EXPECT_DOUBLE_EQ(model.Calculate(), 256);
+}

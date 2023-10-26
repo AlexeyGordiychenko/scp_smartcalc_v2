@@ -307,17 +307,24 @@ class Model {
 
   void HandleBinaryOperator(std::stack<Token>& op_stack, TokenType ctt,
                             TokenType ptt) {
+    // If unary + or -, push 0 into the output queue
     if ((ptt == TokenType::kNone || ptt == TokenType::kOpenParenthesis) &&
         IsPlusMinus(ctt)) {
       rpn_queue_.push(0.0);
     }
 
-    Token top;
-    while (!op_stack.empty() &&
-           GetPriority(std::get<TokenType>(top = op_stack.top())) >=
-               GetPriority(ctt)) {
-      op_stack.pop();
-      rpn_queue_.push(top);
+    while (!op_stack.empty()) {
+      auto top = op_stack.top();
+      auto stack_priority = GetPriority(std::get<TokenType>(top));
+      auto ctt_priority = GetPriority(ctt);
+      // Exp has a right-to-left associativity, so we use '>' for it
+      if ((ctt == TokenType::kExp) ? stack_priority > ctt_priority
+                                   : stack_priority >= ctt_priority) {
+        op_stack.pop();
+        rpn_queue_.push(top);
+      } else {
+        break;
+      }
     }
     op_stack.push(ctt);
   }
