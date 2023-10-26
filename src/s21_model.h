@@ -18,7 +18,7 @@ class Model {
     auto expression_end = expression.end();
     auto it = expression.begin();
 
-    while (it != expression_end) {
+    while (SkipSpaces(it, expression_end)) {
       curr_token_type = GetTokenType(it, expression_end);
 
       if (!IsValidToken(curr_token_type, prev_token_type)) {
@@ -334,5 +334,11 @@ class Model {
       rpn_queue_.push(top);
       op_stack.pop();
     }
+  }
+
+  bool SkipSpaces(std::string::const_iterator& it,
+                  std::string::const_iterator& end) {
+    while (it != end && std::isspace(*it)) ++it;
+    return it != end;
   }
 };

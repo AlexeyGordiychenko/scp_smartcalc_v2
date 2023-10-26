@@ -461,3 +461,14 @@ TEST(s21_loose_decimal_points_, 3) {
   Model model;
   EXPECT_THROW(model.ParseExpression(".sin(45)"), std::invalid_argument);
 }
+
+TEST(s21_spaces, 1) {
+  Model model;
+  EXPECT_THROW(model.ParseExpression("sin(4 5)"), std::invalid_argument);
+}
+
+TEST(s21_spaces, 2) {
+  Model model;
+  EXPECT_THROW(model.ParseExpression("lo g(10)*2^3*5+x-x"),
+               std::invalid_argument);
+}
