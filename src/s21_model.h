@@ -91,6 +91,8 @@ class Model {
   }
 
  private:
+  // All possible token types, the order is important, because operators '>' '<'
+  // are used in conditions
   enum class TokenType : char {
     kNone,
     kNumber,
@@ -201,8 +203,14 @@ class Model {
                          std::string::const_iterator& end) {
     TokenType res = TokenType::kNone;
     if (std::isdigit(*it) || *it == '.') {
+      // If it's a digit, set the correct token type and exit the function,
+      // the number will be parsed later in the ParseNumber function, called
+      // from ParseExpression function
       res = TokenType::kNumber;
     } else {
+      // Convert the first char to a string, if it's a letter then parse all the
+      // consecutive letters (except 'x'), then compare the token to all
+      // possible operators/functions
       std::string token(1, *it);
       if (std::isalpha(*it) && *it != 'x') {
         while (it++ != end && std::isalpha(*it) && *it != 'x') {
@@ -312,6 +320,9 @@ class Model {
       rpn_queue_.push(0.0);
     }
 
+    // While there is an token-operator O2 at the top of the stack, that has
+    // greater or equal precedence than O1, pop O2 from the stack into the
+    // output queue, push O1 onto the stack
     while (!op_stack.empty()) {
       auto top = op_stack.top();
       auto stack_priority = GetPriority(std::get<TokenType>(top));
@@ -329,6 +340,8 @@ class Model {
   }
 
   void MoveOperatorsFromStackToQueue(std::stack<Token>& op_stack) {
+    // At the end of the parsing if there are operators left in the stack, move
+    // them all to the queue
     while (!op_stack.empty()) {
       auto top = op_stack.top();
       TokenType* op = std::get_if<TokenType>(&top);
