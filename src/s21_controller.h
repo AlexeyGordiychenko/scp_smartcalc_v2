@@ -1,3 +1,6 @@
+#ifndef S21_SMARTCALC2_CONTROLLER_H
+#define S21_SMARTCALC2_CONTROLLER_H
+
 #include "s21_model.h"
 
 namespace s21 {
@@ -19,3 +22,4 @@ class Controller {
   Model* model_;
 };
 }  // namespace s21
+#endif  // S21_SMARTCALC2_CONTROLLER_H()

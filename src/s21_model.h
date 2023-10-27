@@ -1,3 +1,6 @@
+#ifndef S21_SMARTCALC2_MODEL_H
+#define S21_SMARTCALC2_MODEL_H
+
 #include <charconv>
 #include <cmath>
 #include <functional>
@@ -368,3 +371,4 @@ class Model {
   }
 };
 }  // namespace s21
+#endif  // S21_SMARTCALC2_MODEL_H
