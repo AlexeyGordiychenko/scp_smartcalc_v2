@@ -11,6 +11,8 @@
 #include <unordered_map>
 #include <variant>
 
+#include "s21_credit.h"
+
 namespace s21 {
 
 class Model {
@@ -88,6 +90,34 @@ class Model {
     }
 
     return eval_stack.top();
+  }
+
+  CreditResult CreditAnnuity(double principal, double term,
+                             double interestRate) {
+    double r = interestRate / 12 / 100;
+    int n = term * 12;
+    double monthly = std::round(((principal * r * std::pow((1 + r), n)) /
+                                 (std::pow((1 + r), n) - 1)) *
+                                100) /
+                     100;
+    double total = monthly * term * 12;
+
+    return {monthly, monthly, total - principal, total};
+  };
+  CreditResult CreditDifferentiated(double principal, double term,
+                                    double interestRate) {
+    double total = 0;
+    int m = 1;
+    double monthly_start =
+        CreditDifferentiatedMonthly(principal, term, interestRate, m++);
+    total += monthly_start;
+    for (; m < term * 12; m++) {
+      total += CreditDifferentiatedMonthly(principal, term, interestRate, m);
+    }
+    double monthly_end =
+        CreditDifferentiatedMonthly(principal, term, interestRate, m);
+    total += monthly_end;
+    return {monthly_start, monthly_end, total - principal, total};
   }
 
  private:
@@ -369,6 +399,15 @@ class Model {
   void ClearTheQueue() {
     if (!rpn_queue_.empty()) rpn_queue_ = {};
   }
+
+  double CreditDifferentiatedMonthly(double principal, double term,
+                                     double interestRate, int m) {
+    double i = interestRate / 12 / 100;
+    int N = term * 12;
+    double principalPayment = principal / N;
+    double interestPayment = (principal - (principalPayment) * (m - 1)) * i;
+    return principalPayment + interestPayment;
+  };
 };
 }  // namespace s21
 #endif  // S21_SMARTCALC2_MODEL_H

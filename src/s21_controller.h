@@ -1,6 +1,7 @@
 #ifndef S21_SMARTCALC2_CONTROLLER_H
 #define S21_SMARTCALC2_CONTROLLER_H
 
+#include "s21_credit.h"
 #include "s21_model.h"
 
 namespace s21 {
@@ -17,6 +18,15 @@ class Controller {
     model_->ParseExpression(expression);
   }
   double Calculate(double x = 0) { return model_->Calculate(x); }
+  CreditResult CreditAnnuity(double principal, double term,
+                             double interestRate) {
+    return model_->CreditAnnuity(principal, term, interestRate);
+  }
+
+  CreditResult CreditDifferentiated(double principal, double term,
+                                    double interestRate) {
+    return model_->CreditDifferentiated(principal, term, interestRate);
+  }
 
  private:
   Model* model_;
