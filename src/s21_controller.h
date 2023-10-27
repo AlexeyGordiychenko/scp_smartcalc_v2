@@ -1,10 +1,13 @@
 #ifndef S21_SMARTCALC2_CONTROLLER_H
 #define S21_SMARTCALC2_CONTROLLER_H
 
+#include <string>
+
 #include "s21_credit.h"
-#include "s21_model.h"
 
 namespace s21 {
+
+class Model;
 
 class Controller {
  public:
@@ -14,19 +17,12 @@ class Controller {
   Controller(Controller&&) = delete;
   Controller& operator=(Controller&&) = delete;
   ~Controller() = default;
-  void ParseExpression(const std::string& expression) {
-    model_->ParseExpression(expression);
-  }
-  double Calculate(double x = 0) { return model_->Calculate(x); }
+  void ParseExpression(const std::string& expression);
+  double Calculate(double x = 0);
   CreditResult CreditAnnuity(double principal, double term,
-                             double interestRate) {
-    return model_->CreditAnnuity(principal, term, interestRate);
-  }
-
+                             double interestRate);
   CreditResult CreditDifferentiated(double principal, double term,
-                                    double interestRate) {
-    return model_->CreditDifferentiated(principal, term, interestRate);
-  }
+                                    double interestRate);
 
  private:
   Model* model_;
