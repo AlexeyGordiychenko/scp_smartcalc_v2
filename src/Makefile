@@ -1,30 +1,41 @@
+# Constants
 CC=g++
 CFLAGS=-Wall -Wextra -Werror -std=c++17 -fmax-errors=1
 OFLAGS=-O2
 LDFLAGS=-lgtest -pthread
 
+# Coverage
 GCOVFLAGS=--coverage
 GCOV_DIR=gcov
 
+# Directories
 TEST_DIR=tests
 SRC_DIR=.
 OBJ_DIR=obj
 OBJ_DIR_GCOV=$(OBJ_DIR)/$(GCOV_DIR)
 OBJ_DIR_TEST=$(OBJ_DIR)/$(TEST_DIR)
+BUILD_DIR=build
+INSTALL_DIR=install
 
+# Files
 SRCS=$(wildcard $(SRC_DIR)/s21_*.h)
 SRCS_TEST=$(wildcard $(TEST_DIR)/s21_*.cc)
 OBJS_TEST=$(patsubst $(TEST_DIR)/%.cc,$(OBJ_DIR_TEST)/%.o,$(SRCS_TEST))
 OBJS_GCOV=$(patsubst $(TEST_DIR)/%.cc,$(OBJ_DIR_GCOV)/%.o,$(SRCS_TEST))
 
+# Builds
+PROGRAM=s21_SmartCalc
 TEST=test
 TEST_GCOV=$(TEST)_gcov
 TEST_BUILD=$(TEST)_build
 TEST_BUILD_GCOV=$(TEST_BUILD)_gcov
 
-.PHONY: force all $(TEST) $(TEST_BUILD) $(TEST_GCOV) $(TEST_BUILD_GCOV) gcov_report clean clean_gcda rebuild clang_n clang_i valgrind valgrind_mac
+# Docs
+DOC=doc_smartcalc
 
-all: $(TEST)
+.PHONY: all $(TEST) $(TEST_BUILD) $(TEST_GCOV) $(TEST_BUILD_GCOV) build install uninstall gcov_report lcov_report dvi dist clean clean_gcda rebuild clang_n clang_i valgrind valgrind_mac
+
+all: install
 
 # temporary rules for testing/debugging standalone .cc files {
 force:
@@ -55,6 +66,17 @@ $(OBJ_DIR_GCOV)/%.o: $(TEST_DIR)/%.cc
 	@mkdir -p $(OBJ_DIR_GCOV)
 	$(CC) $(CFLAGS) $(GCOVFLAGS) -c $< -o $@
 
+build:
+	@mkdir -p $(BUILD_DIR)
+	cd ./$(BUILD_DIR)/ && qmake ../ && make
+
+install: build
+	@mkdir -p $(INSTALL_DIR)
+	@cp $(BUILD_DIR)/$(PROGRAM) $(INSTALL_DIR)/$(PROGRAM)
+
+uninstall:
+	rm -rf $(INSTALL_DIR)
+
 gcov_report: $(TEST_GCOV)
 	mkdir -p $(GCOV_DIR)
 	gcovr --html-details  -o $(GCOV_DIR)/index.html --filter s21_\.\*.h
@@ -66,8 +88,18 @@ lcov_report: $(TEST_GCOV)
 	genhtml -o $(GCOV_DIR) $(GCOV_DIR)/coverage.info 
 	open $(GCOV_DIR)/index.html
 
+dvi:
+	texi2dvi --clean --pdf $(DOC).texi
+	open $(DOC).pdf
+
+dist:
+	mkdir -p $(PROGRAM)/src
+	@cp Makefile s21_*.c s21_*.h *.pro *.cpp *.ui *.user $(PROGRAM)/src 2>/dev/null || true
+	tar cvzf $(PROGRAM).tgz $(PROGRAM)/
+	rm -rf $(PROGRAM)/
+
 clean:
-	rm -rf $(OBJ_DIR) $(GCOV_DIR) $(TEST) $(TEST_GCOV)
+	rm -rf $(OBJ_DIR) $(GCOV_DIR) $(BUILD_DIR) $(TEST) $(TEST_GCOV) $(DOC).pdf
 
 clean_gcda:
 	rm -rf $(OBJ_DIR)/*.gcda
