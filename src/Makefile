@@ -24,14 +24,14 @@ OBJS_TEST=$(patsubst $(TEST_DIR)/%.cc,$(OBJ_DIR_TEST)/%.o,$(SRCS_TEST))
 OBJS_GCOV=$(patsubst $(TEST_DIR)/%.cc,$(OBJ_DIR_GCOV)/%.o,$(SRCS_TEST))
 
 # Builds
-PROGRAM=s21_SmartCalc
+PROGRAM=s21_SmartCalc_v2
 TEST=test
 TEST_GCOV=$(TEST)_gcov
 TEST_BUILD=$(TEST)_build
 TEST_BUILD_GCOV=$(TEST_BUILD)_gcov
 
 # Docs
-DOC=doc_smartcalc
+DOC=doc_smartcalc_v2
 
 .PHONY: all $(TEST) $(TEST_BUILD) $(TEST_GCOV) $(TEST_BUILD_GCOV) build install uninstall gcov_report lcov_report dvi dist clean clean_gcda rebuild clang_n clang_i valgrind valgrind_mac
 
