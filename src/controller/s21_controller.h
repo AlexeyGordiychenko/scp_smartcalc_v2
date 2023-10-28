@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "s21_credit.h"
+#include "../credit/s21_credit.h"
 
 namespace s21 {
 

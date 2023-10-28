@@ -5,7 +5,7 @@
 #include <QLocale>
 #include <QMainWindow>
 
-#include "s21_controller.h"
+#include "../controller/s21_controller.h"
 #include "s21_view_graph.h"
 
 namespace Ui {

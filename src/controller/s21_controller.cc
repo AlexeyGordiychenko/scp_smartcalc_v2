@@ -1,6 +1,6 @@
 #include "s21_controller.h"
 
-#include "s21_model.h"
+#include "../model/s21_model.h"
 
 void s21::Controller::ParseExpression(const std::string& expression) {
   model_->ParseExpression(expression);

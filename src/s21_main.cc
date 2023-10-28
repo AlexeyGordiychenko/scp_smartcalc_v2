@@ -1,8 +1,8 @@
 #include <QApplication>
 
-#include "s21_controller.h"
-#include "s21_model.h"
-#include "s21_view.h"
+#include "controller/s21_controller.h"
+#include "model/s21_model.h"
+#include "view/s21_view.h"
 
 int main(int argc, char *argv[]) {
   QLocale::setDefault(QLocale::C);

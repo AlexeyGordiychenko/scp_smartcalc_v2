@@ -3,8 +3,8 @@
 
 #include <QDialog>
 
+#include "../controller/s21_controller.h"
 #include "QVector"
-#include "s21_controller.h"
 
 namespace Ui {
 class ViewGraph;

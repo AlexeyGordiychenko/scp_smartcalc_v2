@@ -3,7 +3,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../s21_credit.h"
-#include "../s21_model.h"
+#include "../credit/s21_credit.h"
+#include "../model/s21_model.h"
 
 #endif  // S21_CALC2_TESTS_H

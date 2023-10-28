@@ -1,6 +1,6 @@
 #include "s21_view_graph.h"
 
-#include "qcustomplot.h"
+#include "../thirdparty/qcustomplot.h"
 #include "ui_s21_view_graph.h"
 
 s21::ViewGraph::ViewGraph(s21::Controller* controller, QWidget* parent)

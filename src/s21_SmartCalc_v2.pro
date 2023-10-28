@@ -12,22 +12,22 @@ CONFIG += c++17
 
 SOURCES += \
     s21_main.cc \
-    qcustomplot.cpp \
-    s21_view_graph.cc \
-    s21_view.cc \
-    s21_controller.cc
+    thirdparty/qcustomplot.cpp \
+    view/s21_view_graph.cc \
+    view/s21_view.cc \
+    controller/s21_controller.cc
 
 HEADERS += \
-    qcustomplot.h \
-    s21_view_graph.h \
-    s21_view.h \
-    s21_model.h \
-    s21_controller.h
+    thirdparty/qcustomplot.h \
+    view/s21_view_graph.h \
+    view/s21_view.h \
+    model/s21_model.h \
+    controller/s21_controller.h
 
 
 FORMS += \
-    s21_view_graph.ui \
-    s21_view.ui
+    view/s21_view_graph.ui \
+    view/s21_view.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
