@@ -10,6 +10,7 @@ GCOV_DIR=gcov
 
 # Directories
 TEST_DIR=tests
+MODEL_DIR=model
 SRC_DIR=.
 OBJ_DIR=obj
 OBJ_DIR_GCOV=$(OBJ_DIR)/$(GCOV_DIR)
@@ -18,10 +19,9 @@ BUILD_DIR=build
 INSTALL_DIR=install
 
 # Files
-SRCS=$(wildcard $(SRC_DIR)/s21_*.h)
-SRCS_TEST=$(wildcard $(TEST_DIR)/s21_*.cc)
-OBJS_TEST=$(patsubst $(TEST_DIR)/%.cc,$(OBJ_DIR_TEST)/%.o,$(SRCS_TEST))
-OBJS_GCOV=$(patsubst $(TEST_DIR)/%.cc,$(OBJ_DIR_GCOV)/%.o,$(SRCS_TEST))
+SRCS_TEST=$(wildcard $(TEST_DIR)/s21_*.cc $(MODEL_DIR)/s21_*.cc)
+OBJS_TEST=$(patsubst %.cc, $(OBJ_DIR_TEST)/%.o, $(notdir $(SRCS_TEST)))
+OBJS_GCOV=$(patsubst %.cc, $(OBJ_DIR_GCOV)/%.o, $(notdir $(SRCS_TEST)))
 
 # Builds
 PROGRAM=s21_SmartCalc_v2
@@ -29,6 +29,7 @@ TEST=test
 TEST_GCOV=$(TEST)_gcov
 TEST_BUILD=$(TEST)_build
 TEST_BUILD_GCOV=$(TEST_BUILD)_gcov
+VPATH=$(TEST_DIR):$(MODEL_DIR)
 
 # Docs
 DOC=doc_smartcalc_v2
@@ -51,7 +52,7 @@ $(TEST): $(TEST_BUILD)
 $(TEST_BUILD): $(OBJS_TEST)
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) $(OFLAGS) -o $(TEST)
 
-$(OBJ_DIR_TEST)/%.o: $(TEST_DIR)/%.cc
+$(OBJ_DIR_TEST)/%.o: %.cc
 	@mkdir -p $(OBJ_DIR_TEST)
 	$(CC) $(CFLAGS) $(OFLAGS) -c $< -o $@
 
@@ -62,7 +63,7 @@ $(TEST_GCOV): $(TEST_BUILD_GCOV)
 $(TEST_BUILD_GCOV): $(OBJS_GCOV)
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) $(GCOVFLAGS) -o $(TEST_GCOV)
 
-$(OBJ_DIR_GCOV)/%.o: $(TEST_DIR)/%.cc
+$(OBJ_DIR_GCOV)/%.o: %.cc
 	@mkdir -p $(OBJ_DIR_GCOV)
 	$(CC) $(CFLAGS) $(GCOVFLAGS) -c $< -o $@
 
@@ -79,7 +80,7 @@ uninstall:
 
 gcov_report: $(TEST_GCOV)
 	mkdir -p $(GCOV_DIR)
-	gcovr --html-details  -o $(GCOV_DIR)/index.html --filter s21_\.\*.h
+	gcovr --html-details -o $(GCOV_DIR)/index.html --filter $(MODEL_DIR)/s21_\.\*
 	open $(GCOV_DIR)/index.html
 
 lcov_report: $(TEST_GCOV)
