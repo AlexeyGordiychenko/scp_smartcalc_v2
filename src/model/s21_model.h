@@ -179,7 +179,8 @@ class Model {
       {"sqrt", TokenType::kSqrt},
       {"ln", TokenType::kLn},
       {"log", TokenType::kLog},
-      {"x", TokenType::kX}};
+      {"x", TokenType::kX},
+      {"X", TokenType::kX}};
 
   static inline std::unordered_map<TokenType, std::function<double(double)>>
       unary_functions_map_ = {
@@ -242,8 +243,8 @@ class Model {
       // consecutive letters (except 'x'), then compare the token to all
       // possible operators/functions
       std::string token(1, *it);
-      if (std::isalpha(*it) && *it != 'x') {
-        while (it++ != end && std::isalpha(*it) && *it != 'x') {
+      if (std::isalpha(*it) && *it != 'x' && *it != 'X') {
+        while (it++ != end && std::isalpha(*it) && *it != 'x' && *it != 'X') {
           token += *it;
         }
       } else {

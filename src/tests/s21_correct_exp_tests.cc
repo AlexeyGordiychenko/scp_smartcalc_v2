@@ -271,7 +271,7 @@ TEST(s21_correct, 43) {
 
 TEST(s21_correct, 44) {
   s21::Model model;
-  model.ParseExpression("cos(0)+sin(3.14159/2)-tan(3.14159/x)+acos(1)");
+  model.ParseExpression("cos(0)+sin(3.14159/2)-tan(3.14159/X)+acos(1)");
   EXPECT_DOUBLE_EQ(model.Calculate(9977), 1.9996851167572804);
 }
 
@@ -295,7 +295,7 @@ TEST(s21_correct, 47) {
 
 TEST(s21_correct, 48) {
   s21::Model model;
-  model.ParseExpression("log(10)*2^3*5+x-x");
+  model.ParseExpression("log(10)*2^3*5+x-X");
   EXPECT_DOUBLE_EQ(model.Calculate(2065), 40.0);
 }
 
@@ -325,7 +325,7 @@ TEST(s21_correct, 52) {
 
 TEST(s21_correct, 53) {
   s21::Model model;
-  model.ParseExpression("cos(x)-1modx+sin(3.14159/2)*tan(3.14159/4)");
+  model.ParseExpression("cos(X)-1modx+sin(3.14159/2)*tan(3.14159/4)");
   EXPECT_DOUBLE_EQ(model.Calculate(3398), 0.359324287215802);
 }
 
@@ -373,7 +373,7 @@ TEST(s21_correct, 60) {
 
 TEST(s21_correct, 61) {
   s21::Model model;
-  model.ParseExpression(" x ^ 3 * 5+15-x+sqrt(16) ");
+  model.ParseExpression(" X ^ 3 * 5+15-x+sqrt(16) ");
   EXPECT_DOUBLE_EQ(model.Calculate(1810), 29648703209.0);
 }
 
@@ -507,7 +507,7 @@ TEST(s21_correct, 82) {
 
 TEST(s21_correct, 83) {
   s21::Model model;
-  model.ParseExpression("(x+2.3e4)/(x-1.2e2)+1.1e-1^(2*1.0471975511965976)");
+  model.ParseExpression("(x+2.3e4)/(X-1.2e2)+1.1e-1^(2*1.0471975511965976)");
   EXPECT_DOUBLE_EQ(model.Calculate(8106), 3.9048905738199187);
 }
 

@@ -198,7 +198,7 @@ void s21::View::s21_calc_result() {
   } else {
     double x_value = 0;
     bool x_ok = true;
-    if (ui->expressionText->text().contains("x")) {
+    if (ui->expressionText->text().contains("x", Qt::CaseInsensitive)) {
       x_value = ui->valueX->text().toDouble(&x_ok);
     }
     if (x_ok) {
