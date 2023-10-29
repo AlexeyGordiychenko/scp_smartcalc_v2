@@ -5,7 +5,6 @@
 s21::View::View(s21::Controller *controller, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::View), s21_controller_(controller) {
   ui->setupUi(this);
-  s21_view_graph = new ViewGraph(controller, this);
 
   // radio buttons
 
@@ -190,6 +189,7 @@ void s21::View::s21_calc_result() {
     double x_value_min = ui->valueXMin->text().toDouble(&x_min_ok);
     double x_value_max = ui->valueXMax->text().toDouble(&x_max_ok);
     if (x_min_ok && x_max_ok && x_value_min <= x_value_max) {
+      s21_view_graph = new ViewGraph(s21_controller_, this);
       s21_view_graph->on_to_draw_button_clicked(x_value_min, x_value_max);
       s21_view_graph->show();
     } else {
