@@ -191,6 +191,7 @@ void s21::View::s21_calc_result() {
     if (x_min_ok && x_max_ok && x_value_min <= x_value_max) {
       s21_view_graph = new ViewGraph(s21_controller_, this);
       s21_view_graph->on_to_draw_button_clicked(x_value_min, x_value_max);
+      s21_view_graph->setWindowTitle("Graph for " + ui->expressionText->text());
       s21_view_graph->show();
     } else {
       s21_set_calc_result_invalid_x();
