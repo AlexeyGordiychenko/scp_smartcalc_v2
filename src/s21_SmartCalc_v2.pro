@@ -15,6 +15,7 @@ SOURCES += \
     thirdparty/qcustomplot.cpp \
     view/s21_view_graph.cc \
     view/s21_view.cc \
+    model/s21_model.cc \
     controller/s21_controller.cc
 
 HEADERS += \
