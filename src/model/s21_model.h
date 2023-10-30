@@ -14,10 +14,11 @@ namespace s21 {
 
 class Model {
  public:
+  // Main functions
   void ParseExpression(const std::string& expression);
-
   double Calculate(double x = 0);
 
+  // Bonus functions (credit)
   CreditResult CreditAnnuity(double principal, double term,
                              double interestRate);
   CreditResult CreditDifferentiated(double principal, double term,
@@ -51,7 +52,12 @@ class Model {
 
   using Token = std::variant<double, TokenType>;
 
+  std::vector<Token> rpn_queue_;
+
+  // Message text if an expression is invalid
   static const inline std::string invalid_exp_message_ = "Invalid expression";
+
+  // Basic arithmetic functions
   static double Add(double a, double b) { return a + b; }
   static double Subtract(double a, double b) { return a - b; }
   static double Multiply(double a, double b) { return a * b; }
@@ -62,8 +68,7 @@ class Model {
     return a / b;
   }
 
-  std::vector<Token> rpn_queue_;
-
+  // Maps to parse tokens and handle functions
   static inline std::unordered_map<std::string, TokenType> tokens_map_ = {
       {"(", TokenType::kOpenParenthesis},
       {")", TokenType::kCloseParenthesis},
@@ -106,6 +111,7 @@ class Model {
           {TokenType::kMod, static_cast<double (*)(double, double)>(std::fmod)},
           {TokenType::kExp, static_cast<double (*)(double, double)>(std::pow)}};
 
+  // Helper functions
   bool IsBinaryOperator(TokenType type);
 
   bool IsValue(TokenType type);

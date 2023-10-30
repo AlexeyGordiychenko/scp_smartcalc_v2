@@ -92,6 +92,7 @@ s21::CreditResult s21::Model::CreditAnnuity(double principal, double term,
 
   return {monthly, monthly, total - principal, total};
 };
+
 s21::CreditResult s21::Model::CreditDifferentiated(double principal,
                                                    double term,
                                                    double interestRate) {

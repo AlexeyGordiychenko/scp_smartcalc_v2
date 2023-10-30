@@ -17,30 +17,35 @@ class View : public QMainWindow {
   Q_OBJECT
 
  public:
+  // Constructors and the destructor
   View(s21::Controller *controller, QWidget *parent = nullptr);
+  View(const View &) = delete;
+  View &operator=(const View &) = delete;
+  View(View &&) = delete;
+  View &operator=(View &&) = delete;
   ~View();
 
- private:
-  Ui::View *ui;
-  ViewGraph *s21_view_graph;
-  s21::Controller *s21_controller_;
-
  private slots:
-  void s21_button_to_result();
-  void s21_button_to_result_with_bracket();
-  void s21_clear_result();
-  void s21_set_calc_result_invalid_x();
-  void s21_set_calc_result_invalid_exp();
-  void s21_set_calc_result_division_by_zero();
-  void s21_calc_result();
-  void s21_set_credit_result_invalid();
-  void s21_set_credit_result(s21::CreditResult res);
-  void s21_credit_result();
-  QString get_format_string(double value);
+  // Main functions
+  void ButtonToResult();
+  void ButtonToResultWithBracket();
+  void ClearResult();
+  void SetCalcResultInvalidX();
+  void SetCalcResultInvalidExp();
+  void SetCalcResultDivisionByZero();
+  void CalcExpression();
+  QString GetFormatString(double value);
+
+  // Bonus functions (credit)
+  void SetCreditResultInvalid();
+  void SetCreditResult(s21::CreditResult res);
+  void CalcCredit();
 
  private:
-  bool expEvaluated;
+  bool exp_evaluated_;
+  Ui::View *ui_;
+  ViewGraph *view_graph_;
+  Controller *controller_;
 };
 }  // namespace s21
-
 #endif  // S21_SMARTCALC2_VIEW_H

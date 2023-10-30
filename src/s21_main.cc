@@ -6,10 +6,10 @@
 
 int main(int argc, char *argv[]) {
   QLocale::setDefault(QLocale::C);
-  QApplication a(argc, argv);
+  QApplication app(argc, argv);
   s21::Model model;
   s21::Controller controller(&model);
-  s21::View w(&controller);
-  w.show();
-  return a.exec();
+  s21::View view(&controller);
+  view.show();
+  return app.exec();
 }

@@ -4,14 +4,14 @@
 #include "ui_s21_view_graph.h"
 
 s21::ViewGraph::ViewGraph(s21::Controller* controller, QWidget* parent)
-    : QDialog(parent), ui(new Ui::ViewGraph), s21_controller_(controller) {
-  ui->setupUi(this);
+    : QDialog(parent), ui_(new Ui::ViewGraph), controller_(controller) {
+  ui_->setupUi(this);
 }
 
-s21::ViewGraph::~ViewGraph() { delete ui; }
+s21::ViewGraph::~ViewGraph() { delete ui_; }
 
-void s21::ViewGraph::on_to_draw_button_clicked(double x_min, double x_max) {
-  ui->widget->clearGraphs();
+void s21::ViewGraph::DrawGraph(double x_min, double x_max) {
+  ui_->widget->clearGraphs();
 
   double range_max = 1000000;
   if (x_max > range_max) x_max = range_max;
@@ -23,31 +23,31 @@ void s21::ViewGraph::on_to_draw_button_clicked(double x_min, double x_max) {
     if (abs(x_value) < 1e-7) x_value = 0;
     bool calculated = true;
     try {
-      y_value = s21_controller_->Calculate(x_value);
+      y_value = controller_->Calculate(x_value);
     } catch (const std::exception& e) {
       calculated = false;
     }
     if (calculated && y_value <= range_max && y_value >= -range_max) {
-      y.push_back(y_value);
-      x.push_back(x_value);
+      y_dots_.push_back(y_value);
+      x_dots_.push_back(x_value);
     } else {
       // Add the previous segment to the graph
-      ui->widget->addGraph();
-      ui->widget->graph()->addData(x, y);
+      ui_->widget->addGraph();
+      ui_->widget->graph()->addData(x_dots_, y_dots_);
       // Start a new segment
-      x.clear();
-      y.clear();
+      x_dots_.clear();
+      y_dots_.clear();
     }
   }
 
-  ui->widget->addGraph();
-  ui->widget->graph()->addData(x, y);
+  ui_->widget->addGraph();
+  ui_->widget->graph()->addData(x_dots_, y_dots_);
 
-  ui->widget->setInteraction(QCP::iRangeZoom, true);
-  ui->widget->setInteraction(QCP::iRangeDrag, true);
-  ui->widget->rescaleAxes();
-  ui->widget->replot();
+  ui_->widget->setInteraction(QCP::iRangeZoom, true);
+  ui_->widget->setInteraction(QCP::iRangeDrag, true);
+  ui_->widget->rescaleAxes();
+  ui_->widget->replot();
 
-  x.clear();
-  y.clear();
+  x_dots_.clear();
+  y_dots_.clear();
 }

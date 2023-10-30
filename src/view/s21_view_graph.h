@@ -16,15 +16,21 @@ class ViewGraph : public QDialog {
   Q_OBJECT
 
  public:
+  // Constructors and the destructor
   explicit ViewGraph(s21::Controller *controller, QWidget *parent = nullptr);
-  void on_to_draw_button_clicked(double x_min, double x_max);
-
+  ViewGraph(const ViewGraph &) = delete;
+  ViewGraph &operator=(const ViewGraph &) = delete;
+  ViewGraph(ViewGraph &&) = delete;
+  ViewGraph &operator=(ViewGraph &&) = delete;
   ~ViewGraph();
 
+  // Main functions
+  void DrawGraph(double x_min, double x_max);
+
  private:
-  Ui::ViewGraph *ui;
-  s21::Controller *s21_controller_;
-  QVector<double> x, y;
+  Ui::ViewGraph *ui_;
+  Controller *controller_;
+  QVector<double> x_dots_, y_dots_;
 };
 }  // namespace s21
 #endif  // S21_SMARTCALC2_VIEW_GRAPH_H
