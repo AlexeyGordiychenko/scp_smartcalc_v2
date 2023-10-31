@@ -10,7 +10,7 @@ s21::ViewGraph::ViewGraph(s21::Controller* controller, QWidget* parent)
 
 s21::ViewGraph::~ViewGraph() { delete ui_; }
 
-void s21::ViewGraph::DrawGraph(double x_min, double x_max) {
+void s21::ViewGraph::Calculate(double x_min, double x_max) {
   ui_->widget->clearGraphs();
 
   double range_max = 1000000;
@@ -31,23 +31,26 @@ void s21::ViewGraph::DrawGraph(double x_min, double x_max) {
       y_dots_.push_back(y_value);
       x_dots_.push_back(x_value);
     } else {
-      // Add the previous segment to the graph
-      ui_->widget->addGraph();
-      ui_->widget->graph()->addData(x_dots_, y_dots_);
-      // Start a new segment
-      x_dots_.clear();
-      y_dots_.clear();
+      AddSegment();
     }
   }
+  AddSegment();
+  SetSettings();
+  Draw();
+}
 
+void s21::ViewGraph::AddSegment() {
   ui_->widget->addGraph();
   ui_->widget->graph()->addData(x_dots_, y_dots_);
-
-  ui_->widget->setInteraction(QCP::iRangeZoom, true);
-  ui_->widget->setInteraction(QCP::iRangeDrag, true);
-  ui_->widget->rescaleAxes();
-  ui_->widget->replot();
-
   x_dots_.clear();
   y_dots_.clear();
+}
+void s21::ViewGraph::Draw() {
+  ui_->widget->rescaleAxes();
+  ui_->widget->replot();
+}
+
+void s21::ViewGraph::SetSettings() {
+  ui_->widget->setInteraction(QCP::iRangeZoom, true);
+  ui_->widget->setInteraction(QCP::iRangeDrag, true);
 }

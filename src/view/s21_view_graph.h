@@ -25,7 +25,10 @@ class ViewGraph : public QDialog {
   ~ViewGraph();
 
   // Main functions
-  void DrawGraph(double x_min, double x_max);
+  void Calculate(double x_min, double x_max);
+  void AddSegment();
+  void SetSettings();
+  void Draw();
 
  private:
   Ui::ViewGraph *ui_;
