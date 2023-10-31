@@ -27,19 +27,20 @@ class View : public QMainWindow {
 
  private slots:
   // Main functions
-  void ButtonToResult();
+  void ButtonToResult(bool with_bracket = false);
   void ButtonToResultWithBracket();
   void ClearResult();
-  void SetCalcResultInvalidX();
-  void SetCalcResultInvalidExp();
-  void SetCalcResultDivisionByZero();
-  void CalcExpression();
+  void SetResultInvalidX();
+  void SetResultError(QString err);
+  void Calculate();
+  void CalculateGraph();
+  void CalculateExpression();
   QString GetFormatString(double value);
 
   // Bonus functions (credit)
-  void SetCreditResultInvalid();
+  void SetCreditResultInvalid(QString err = "Invalid input");
   void SetCreditResult(s21::CreditResult res);
-  void CalcCredit();
+  void CalculateCredit();
 
  private:
   bool exp_evaluated_;

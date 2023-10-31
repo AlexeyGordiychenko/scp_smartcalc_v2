@@ -63,8 +63,7 @@ s21::View::View(s21::Controller *controller, QWidget *parent)
           SLOT(ButtonToResultWithBracket()));
   connect(ui_->pushButton_x, SIGNAL(clicked()), this, SLOT(ButtonToResult()));
   connect(ui_->pushButton_clear, SIGNAL(clicked()), this, SLOT(ClearResult()));
-  connect(ui_->pushButton_equal, SIGNAL(clicked()), this,
-          SLOT(CalcExpression()));
+  connect(ui_->pushButton_equal, SIGNAL(clicked()), this, SLOT(Calculate()));
 
   // validation
   QDoubleValidator *x_validator = new QDoubleValidator(
@@ -85,17 +84,12 @@ s21::View::View(s21::Controller *controller, QWidget *parent)
   ui_->credit_term->setValidator(credit_validator);
 
   // calc button
-  connect(ui_->credit_calc, SIGNAL(clicked()), this, SLOT(CalcCredit()));
+  connect(ui_->credit_calc, SIGNAL(clicked()), this, SLOT(CalculateCredit()));
 }
 
 s21::View::~View() { delete ui_; }
 
-void s21::View::ButtonToResultWithBracket() {
-  ButtonToResult();
-  ui_->expressionText->setText(ui_->expressionText->text() + "(");
-}
-
-void s21::View::ButtonToResult() {
+void s21::View::ButtonToResult(bool with_bracket) {
   if (exp_evaluated_) {
     ClearResult();
     exp_evaluated_ = false;
@@ -104,45 +98,92 @@ void s21::View::ButtonToResult() {
 
   QString new_label = ui_->expressionText->text() + button->text();
 
-  ui_->expressionText->setText(new_label);
+  ui_->expressionText->setText(new_label + (with_bracket ? "(" : ""));
 }
+
+void s21::View::ButtonToResultWithBracket() { ButtonToResult(true); }
 
 void s21::View::ClearResult() { ui_->expressionText->setText(""); }
 
-void s21::View::SetCalcResultInvalidX() {
-  ui_->expressionText->setText("Invalid 'x' value");
+void s21::View::SetResultInvalidX() { SetResultError("Invalid 'x' value"); }
+
+void s21::View::SetResultError(QString err) {
+  ui_->expressionText->setText(err);
 }
 
-void s21::View::SetCalcResultInvalidExp() {
-  ui_->expressionText->setText("Invalid expression");
+void s21::View::Calculate() {
+  exp_evaluated_ = true;
+  try {
+    controller_->ParseExpression(ui_->expressionText->text().toStdString());
+  } catch (const std::exception &e) {
+    return SetResultError(e.what());
+  }
+  if (ui_->graphMode->isChecked()) {
+    CalculateGraph();
+  } else {
+    CalculateExpression();
+  }
 }
 
-void s21::View::SetCalcResultDivisionByZero() {
-  ui_->expressionText->setText("Division by zero");
+void s21::View::CalculateGraph() {
+  bool x_min_ok, x_max_ok;
+  double x_value_min = ui_->valueXMin->text().toDouble(&x_min_ok);
+  double x_value_max = ui_->valueXMax->text().toDouble(&x_max_ok);
+  if (x_min_ok && x_max_ok && x_value_min <= x_value_max) {
+    view_graph_ = new ViewGraph(controller_, this);
+    view_graph_->Calculate(x_value_min, x_value_max);
+    view_graph_->setWindowTitle("Graph for " + ui_->expressionText->text());
+    view_graph_->show();
+  } else {
+    SetResultInvalidX();
+  }
 }
 
-void s21::View::SetCreditResultInvalid() {
-  ui_->credit_monthly->setText("Invalid input");
-  ui_->credit_over->setText("Invalid input");
-  ui_->credit_total->setText("Invalid input");
+void s21::View::CalculateExpression() {
+  double x_value = 0;
+  bool x_ok = true;
+  if (ui_->expressionText->text().contains("x", Qt::CaseInsensitive)) {
+    x_value = ui_->valueX->text().toDouble(&x_ok);
+  }
+  if (x_ok) {
+    double value = 0;
+    bool calculated = false;
+    try {
+      value = controller_->Calculate(x_value);
+      calculated = true;
+    } catch (const std::exception &e) {
+      SetResultError(e.what());
+    }
+    if (calculated) {
+      QString numberResult = QString::number(value, 'g', 17);
+      ui_->expressionText->setText(numberResult);
+    }
+  } else {
+    SetResultInvalidX();
+  }
 }
 
 QString s21::View::GetFormatString(double value) {
   return QString::number(value, 'f', 2);
 }
 
+void s21::View::SetCreditResultInvalid(QString err) {
+  ui_->credit_monthly->setText(err);
+  ui_->credit_over->setText(err);
+  ui_->credit_total->setText(err);
+}
+
 void s21::View::SetCreditResult(s21::CreditResult res) {
   QString monthly_text = GetFormatString(res.monthly_start);
   if (res.monthly_start != res.monthly_end) {
-    monthly_text += "...";
-    monthly_text += GetFormatString(res.monthly_end);
+    monthly_text += "..." + GetFormatString(res.monthly_end);
   }
   ui_->credit_monthly->setText(monthly_text);
   ui_->credit_over->setText(GetFormatString(res.over));
   ui_->credit_total->setText(GetFormatString(res.total));
 }
 
-void s21::View::CalcCredit() {
+void s21::View::CalculateCredit() {
   bool credit_principal_ok, credit_term_ok, credit_rate_ok;
   double credit_principal =
       ui_->credit_principal->text().toDouble(&credit_principal_ok);
@@ -160,49 +201,5 @@ void s21::View::CalcCredit() {
     SetCreditResult(res);
   } else {
     SetCreditResultInvalid();
-  }
-}
-
-void s21::View::CalcExpression() {
-  exp_evaluated_ = true;
-  try {
-    controller_->ParseExpression(ui_->expressionText->text().toStdString());
-  } catch (const std::exception &e) {
-    return SetCalcResultInvalidExp();
-  }
-  if (ui_->graphMode->isChecked()) {
-    bool x_min_ok, x_max_ok;
-    double x_value_min = ui_->valueXMin->text().toDouble(&x_min_ok);
-    double x_value_max = ui_->valueXMax->text().toDouble(&x_max_ok);
-    if (x_min_ok && x_max_ok && x_value_min <= x_value_max) {
-      view_graph_ = new ViewGraph(controller_, this);
-      view_graph_->DrawGraph(x_value_min, x_value_max);
-      view_graph_->setWindowTitle("Graph for " + ui_->expressionText->text());
-      view_graph_->show();
-    } else {
-      SetCalcResultInvalidX();
-    }
-  } else {
-    double x_value = 0;
-    bool x_ok = true;
-    if (ui_->expressionText->text().contains("x", Qt::CaseInsensitive)) {
-      x_value = ui_->valueX->text().toDouble(&x_ok);
-    }
-    if (x_ok) {
-      double value = 0;
-      bool calculated = false;
-      try {
-        value = controller_->Calculate(x_value);
-        calculated = true;
-      } catch (const std::domain_error &e) {
-        SetCalcResultDivisionByZero();
-      }
-      if (calculated) {
-        QString numberResult = QString::number(value, 'g', 17);
-        ui_->expressionText->setText(numberResult);
-      }
-    } else {
-      SetCalcResultInvalidX();
-    }
   }
 }
