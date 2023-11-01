@@ -1679,6 +1679,55 @@ border-radius: 6px;
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>expressionText</tabstop>
+  <tabstop>pushButton_clear</tabstop>
+  <tabstop>pushButton_cos</tabstop>
+  <tabstop>pushButton_acos</tabstop>
+  <tabstop>pushButton_open_bracket</tabstop>
+  <tabstop>pushButton_close_bracket</tabstop>
+  <tabstop>pushButton_x</tabstop>
+  <tabstop>pushButton_pow</tabstop>
+  <tabstop>pushButton_sin</tabstop>
+  <tabstop>pushButton_asin</tabstop>
+  <tabstop>pushButton_7</tabstop>
+  <tabstop>pushButton_8</tabstop>
+  <tabstop>pushButton_9</tabstop>
+  <tabstop>pushButton_plus</tabstop>
+  <tabstop>pushButton_tan</tabstop>
+  <tabstop>pushButton_atan</tabstop>
+  <tabstop>pushButton_4</tabstop>
+  <tabstop>pushButton_5</tabstop>
+  <tabstop>pushButton_6</tabstop>
+  <tabstop>pushButton_minus</tabstop>
+  <tabstop>pushButton_ln</tabstop>
+  <tabstop>pushButton_log</tabstop>
+  <tabstop>pushButton_1</tabstop>
+  <tabstop>pushButton_2</tabstop>
+  <tabstop>pushButton_3</tabstop>
+  <tabstop>pushButton_mul</tabstop>
+  <tabstop>pushButton_sqrt</tabstop>
+  <tabstop>pushButton_mod</tabstop>
+  <tabstop>pushButton_0</tabstop>
+  <tabstop>pushButton_point</tabstop>
+  <tabstop>pushButton_equal</tabstop>
+  <tabstop>pushButton_div</tabstop>
+  <tabstop>calcMode</tabstop>
+  <tabstop>graphMode</tabstop>
+  <tabstop>valueX</tabstop>
+  <tabstop>valueXMin</tabstop>
+  <tabstop>valueXMax</tabstop>
+  <tabstop>credit_principal</tabstop>
+  <tabstop>credit_term</tabstop>
+  <tabstop>credit_rate</tabstop>
+  <tabstop>credit_annuity</tabstop>
+  <tabstop>credit_differentiated</tabstop>
+  <tabstop>credit_calc</tabstop>
+  <tabstop>credit_monthly</tabstop>
+  <tabstop>credit_over</tabstop>
+  <tabstop>credit_total</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
