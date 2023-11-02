@@ -18,7 +18,7 @@ void s21::ViewGraph::Calculate(double x_min, double x_max) {
   if (x_min < -range_max) x_min = -range_max;
 
   double h = 0.1, y_value = 0;
-  if (x_max <= 100 && x_min >= -100) h = 0.01;
+  if (x_max <= 10 && x_min >= -10) h = 0.01;
   for (auto x_value = x_min; x_value < x_max; x_value += h) {
     if (abs(x_value) < 1e-7) x_value = 0;
     bool calculated = true;
