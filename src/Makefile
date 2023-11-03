@@ -38,14 +38,6 @@ DOC=doc_smartcalc_v2
 
 all: install
 
-# temporary rules for testing/debugging standalone .cc files {
-force:
-
-%: %.cc force
-	rm -f $@ || true
-	$(CC) $(CFLAGS) -g $< $(LDFLAGS) -o $@
-#}
-
 $(TEST): $(TEST_BUILD)
 	./$@ || true
 
