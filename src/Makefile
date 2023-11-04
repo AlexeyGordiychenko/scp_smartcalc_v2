@@ -101,10 +101,10 @@ clean_gcda:
 rebuild: clean all
 
 clang_n:
-	clang-format -n --style=Google $(SRC_DIR)/*.h $(TEST_DIR)/*.cc
+	clang-format -n --style=Google $(wildcard $(SRC_DIR)/**/*.h) $(wildcard $(SRC_DIR)/**/*.cc)
 
 clang_i:
-	clang-format -i --style=Google $(SRC_DIR)/*.h $(TEST_DIR)/*.cc
+	clang-format -i --style=Google $(wildcard $(SRC_DIR)/**/*.h) $(wildcard $(SRC_DIR)/**/*.cc)
 
 valgrind: $(TEST_BUILD)
 	valgrind --tool=memcheck --leak-check=yes ./$(TEST)
