@@ -1,8 +1,8 @@
-#include "s21_view.h"
+#include "scp_view.h"
 
-#include "ui_s21_view.h"
+#include "ui_scp_view.h"
 
-s21::View::View(s21::Controller *controller, QWidget *parent)
+scp::View::View(scp::Controller *controller, QWidget *parent)
     : QMainWindow(parent), ui_(new Ui::View), controller_(controller) {
   ui_->setupUi(this);
 
@@ -87,9 +87,9 @@ s21::View::View(s21::Controller *controller, QWidget *parent)
   connect(ui_->credit_calc, SIGNAL(clicked()), this, SLOT(CalculateCredit()));
 }
 
-s21::View::~View() { delete ui_; }
+scp::View::~View() { delete ui_; }
 
-void s21::View::ButtonToResult(bool with_bracket) {
+void scp::View::ButtonToResult(bool with_bracket) {
   if (exp_evaluated_) {
     ClearResult();
     exp_evaluated_ = false;
@@ -101,17 +101,17 @@ void s21::View::ButtonToResult(bool with_bracket) {
   ui_->expressionText->setText(new_label + (with_bracket ? "(" : ""));
 }
 
-void s21::View::ButtonToResultWithBracket() { ButtonToResult(true); }
+void scp::View::ButtonToResultWithBracket() { ButtonToResult(true); }
 
-void s21::View::ClearResult() { ui_->expressionText->setText(""); }
+void scp::View::ClearResult() { ui_->expressionText->setText(""); }
 
-void s21::View::SetResultInvalidX() { SetResultError("Invalid 'x' value"); }
+void scp::View::SetResultInvalidX() { SetResultError("Invalid 'x' value"); }
 
-void s21::View::SetResultError(QString err) {
+void scp::View::SetResultError(QString err) {
   ui_->expressionText->setText(err);
 }
 
-void s21::View::Calculate() {
+void scp::View::Calculate() {
   exp_evaluated_ = true;
   try {
     controller_->ParseExpression(ui_->expressionText->text().toStdString());
@@ -125,7 +125,7 @@ void s21::View::Calculate() {
   }
 }
 
-void s21::View::CalculateGraph() {
+void scp::View::CalculateGraph() {
   bool x_min_ok, x_max_ok;
   double x_value_min = ui_->valueXMin->text().toDouble(&x_min_ok);
   double x_value_max = ui_->valueXMax->text().toDouble(&x_max_ok);
@@ -139,7 +139,7 @@ void s21::View::CalculateGraph() {
   }
 }
 
-void s21::View::CalculateExpression() {
+void scp::View::CalculateExpression() {
   double x_value = 0;
   bool x_ok = true;
   if (ui_->expressionText->text().contains("x", Qt::CaseInsensitive)) {
@@ -163,17 +163,17 @@ void s21::View::CalculateExpression() {
   }
 }
 
-QString s21::View::GetFormatString(double value) {
+QString scp::View::GetFormatString(double value) {
   return QString::number(value, 'f', 2);
 }
 
-void s21::View::SetCreditResultInvalid(QString err) {
+void scp::View::SetCreditResultInvalid(QString err) {
   ui_->credit_monthly->setText(err);
   ui_->credit_over->setText(err);
   ui_->credit_total->setText(err);
 }
 
-void s21::View::SetCreditResult(s21::CreditResult res) {
+void scp::View::SetCreditResult(scp::CreditResult res) {
   QString monthly_text = GetFormatString(res.monthly_start);
   if (res.monthly_start != res.monthly_end) {
     monthly_text += "..." + GetFormatString(res.monthly_end);
@@ -183,13 +183,13 @@ void s21::View::SetCreditResult(s21::CreditResult res) {
   ui_->credit_total->setText(GetFormatString(res.total));
 }
 
-void s21::View::CalculateCredit() {
+void scp::View::CalculateCredit() {
   bool credit_principal_ok, credit_term_ok, credit_rate_ok;
   double credit_principal =
       ui_->credit_principal->text().toDouble(&credit_principal_ok);
   double credit_term = ui_->credit_term->text().toDouble(&credit_term_ok);
   double credit_rate = ui_->credit_rate->text().toDouble(&credit_rate_ok);
-  s21::CreditResult res;
+  scp::CreditResult res;
   if (credit_principal_ok && credit_term_ok && credit_rate_ok) {
     if (ui_->credit_annuity->isChecked()) {
       res = controller_->CreditAnnuity(credit_principal, credit_term,

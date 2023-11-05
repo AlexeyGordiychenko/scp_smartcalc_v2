@@ -1,16 +1,16 @@
-#include "s21_view_graph.h"
+#include "scp_view_graph.h"
 
 #include "../thirdparty/qcustomplot.h"
-#include "ui_s21_view_graph.h"
+#include "ui_scp_view_graph.h"
 
-s21::ViewGraph::ViewGraph(s21::Controller* controller, QWidget* parent)
+scp::ViewGraph::ViewGraph(scp::Controller* controller, QWidget* parent)
     : QDialog(parent), ui_(new Ui::ViewGraph), controller_(controller) {
   ui_->setupUi(this);
 }
 
-s21::ViewGraph::~ViewGraph() { delete ui_; }
+scp::ViewGraph::~ViewGraph() { delete ui_; }
 
-void s21::ViewGraph::Calculate(double x_min, double x_max) {
+void scp::ViewGraph::Calculate(double x_min, double x_max) {
   ui_->widget->clearGraphs();
 
   double range_max = 1000000;
@@ -39,18 +39,18 @@ void s21::ViewGraph::Calculate(double x_min, double x_max) {
   Draw();
 }
 
-void s21::ViewGraph::AddSegment() {
+void scp::ViewGraph::AddSegment() {
   ui_->widget->addGraph();
   ui_->widget->graph()->addData(x_dots_, y_dots_);
   x_dots_.clear();
   y_dots_.clear();
 }
-void s21::ViewGraph::Draw() {
+void scp::ViewGraph::Draw() {
   ui_->widget->rescaleAxes();
   ui_->widget->replot();
 }
 
-void s21::ViewGraph::SetSettings() {
+void scp::ViewGraph::SetSettings() {
   ui_->widget->setInteraction(QCP::iRangeZoom, true);
   ui_->widget->setInteraction(QCP::iRangeDrag, true);
 }

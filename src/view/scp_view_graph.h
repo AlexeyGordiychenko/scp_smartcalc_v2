@@ -1,23 +1,23 @@
-#ifndef S21_SMARTCALC2_VIEW_GRAPH_H
-#define S21_SMARTCALC2_VIEW_GRAPH_H
+#ifndef SCP_SMARTCALC2_VIEW_GRAPH_H
+#define SCP_SMARTCALC2_VIEW_GRAPH_H
 
 #include <QDialog>
 
-#include "../controller/s21_controller.h"
+#include "../controller/scp_controller.h"
 #include "QVector"
 
 namespace Ui {
 class ViewGraph;
 }
 
-namespace s21 {
+namespace scp {
 
 class ViewGraph : public QDialog {
   Q_OBJECT
 
  public:
   // Constructors and the destructor
-  explicit ViewGraph(s21::Controller *controller, QWidget *parent = nullptr);
+  explicit ViewGraph(scp::Controller *controller, QWidget *parent = nullptr);
   ViewGraph(const ViewGraph &) = delete;
   ViewGraph &operator=(const ViewGraph &) = delete;
   ViewGraph(ViewGraph &&) = delete;
@@ -35,5 +35,5 @@ class ViewGraph : public QDialog {
   Controller *controller_;
   QVector<double> x_dots_, y_dots_;
 };
-}  // namespace s21
-#endif  // S21_SMARTCALC2_VIEW_GRAPH_H
+}  // namespace scp
+#endif  // SCP_SMARTCALC2_VIEW_GRAPH_H

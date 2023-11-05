@@ -1,11 +1,11 @@
-#ifndef S21_SMARTCALC2_CONTROLLER_H
-#define S21_SMARTCALC2_CONTROLLER_H
+#ifndef SCP_SMARTCALC2_CONTROLLER_H
+#define SCP_SMARTCALC2_CONTROLLER_H
 
 #include <string>
 
-#include "../credit/s21_credit.h"
+#include "../credit/scp_credit.h"
 
-namespace s21 {
+namespace scp {
 
 class Model;
 
@@ -32,5 +32,5 @@ class Controller {
  private:
   Model* model_;
 };
-}  // namespace s21
-#endif  // S21_SMARTCALC2_CONTROLLER_H
+}  // namespace scp
+#endif  // SCP_SMARTCALC2_CONTROLLER_H
