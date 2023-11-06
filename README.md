@@ -1,5 +1,13 @@
 # SmartCalc v2.0 (Individual project)
 
+## Score:
+The final score is 113% (max for base and bonus part 1, bonus part 2 wasn't implemented).
+
+The calc was developed with frontend on QT 6.5.2 (C++).
+
+![calc](misc/calc.png)
+![calc_credit](misc/calc_credit.png)
+
 ## Task
 
 Implementation of an extended version of the standard calculator in C++ in the object-oriented programming paradigm using MVC pattern.
